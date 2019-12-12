@@ -2,6 +2,7 @@ const express = require('express');
 const database = require('./connection');
 const path = require('path');
 const childProcess = require('child_process');
+const exporter = require('./exporter');
 
 let uri = 'mongodb://localhost:27017'
 const router = express.Router();
@@ -29,6 +30,18 @@ router.post('/json', async (req, res) => {
     //childProcess.execSync(`rm ${path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`)}`);
 });
 
+// Post: export CSV 
+router.post('/csv', async (req, res) => {
+    const collections = req.body;
+    console.log(collections)
+    const timestamp = Date.now();
+    await exporter({ collections, outputPath: path.join(__dirname, '../', '../', 'temp', `${timestamp}`)});
+    childProcess.execSync(`zip -r ${path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`)} ${path.join(__dirname, '../', '../', 'temp', `${timestamp}`)}`);
+    childProcess.execSync(`rm -rf ${path.join(__dirname, '../', '../', 'temp', `${timestamp}`)}`);
+    res.download(path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`));
+    //childProcess.execSync(`rm ${path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`)}`);
+});
+
 // Add Post
 router.post('/', async (req, res) => {
     res.status(400).send("No POST bitch ass");
@@ -41,7 +54,7 @@ router.delete('/:id', async (req, res) => {
 
 async function loadListCollections() {
     let result = {}
-    await database.connect(uri)
+    await database.setUrl(uri)
     const databases = await database.listDatabases();
     const collections = await Promise.all(databases.map(async db => ({
         db,
