@@ -16,6 +16,7 @@ router.get('/', async (req, res) => {
 // Post: export JSON 
 router.post('/json', async (req, res) => {
     const collections = req.body;
+    console.log(collections)
     const timestamp = Date.now();
     Object.keys(collections)
         .forEach(db => collections[db]
@@ -24,7 +25,7 @@ router.post('/json', async (req, res) => {
         );
     childProcess.execSync(`zip -r ${path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`)} ${path.join(__dirname, '../', '../', 'temp', `${timestamp}`)}`);
     childProcess.execSync(`rm -rf ${path.join(__dirname, '../', '../', 'temp', `${timestamp}`)}`);
-    res.sendFile(path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`));
+    res.download(path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`));
     //childProcess.execSync(`rm ${path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`)}`);
 });
 
