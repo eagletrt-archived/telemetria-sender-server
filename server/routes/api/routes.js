@@ -26,7 +26,7 @@ router.post('/json', async (req, res) => {
         );
     childProcess.execSync(`zip -r ${path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`)} ${path.join(__dirname, '../', '../', 'temp', `${timestamp}`)}`);
     childProcess.execSync(`rm -rf ${path.join(__dirname, '../', '../', 'temp', `${timestamp}`)}`);
-    res.download(path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`));
+    res.sendFile(path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`));
     //childProcess.execSync(`rm ${path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`)}`);
 });
 
@@ -38,7 +38,7 @@ router.post('/csv', async (req, res) => {
     await exporter({ collections, outputPath: path.join(__dirname, '../', '../', 'temp', `${timestamp}`)});
     childProcess.execSync(`zip -r ${path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`)} ${path.join(__dirname, '../', '../', 'temp', `${timestamp}`)}`);
     childProcess.execSync(`rm -rf ${path.join(__dirname, '../', '../', 'temp', `${timestamp}`)}`);
-    res.download(path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`));
+    res.sendFile(path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`));
     //childProcess.execSync(`rm ${path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`)}`);
 });
 
