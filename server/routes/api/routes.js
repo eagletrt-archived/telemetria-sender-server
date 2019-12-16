@@ -24,10 +24,9 @@ router.post('/json', async (req, res) => {
             .forEach(collection => childProcess
                 .execSync(`mongoexport --db=${db} --collection=${collection} --jsonArray --out=${path.join(__dirname, '../', '../', 'temp', `${timestamp}`, db, `${collection}.json`)}`))
         );
-    childProcess.execSync(`zip -r ${path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`)} ${path.join(__dirname, '../', '../', 'temp', `${timestamp}`)}`);
+    childProcess.execSync(`zip -r ${timestamp}.zip ${timestamp}/*`, { cwd: path.join(__dirname, '../', '../', 'temp') });
     childProcess.execSync(`rm -rf ${path.join(__dirname, '../', '../', 'temp', `${timestamp}`)}`);
-    res.sendFile(path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`));
-    //childProcess.execSync(`rm ${path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`)}`);
+    res.sendFile(path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`), () => childProcess.execSync(`rm ${path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`)}`));
 });
 
 // Post: export CSV 
@@ -36,10 +35,9 @@ router.post('/csv', async (req, res) => {
     console.log(collections)
     const timestamp = Date.now();
     await exporter({ collections, outputPath: path.join(__dirname, '../', '../', 'temp', `${timestamp}`)});
-    childProcess.execSync(`zip -r ${path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`)} ${path.join(__dirname, '../', '../', 'temp', `${timestamp}`)}`);
+    childProcess.execSync(`zip -r ${timestamp}.zip ${timestamp}/*`, { cwd: path.join(__dirname, '../', '../', 'temp') });
     childProcess.execSync(`rm -rf ${path.join(__dirname, '../', '../', 'temp', `${timestamp}`)}`);
-    res.sendFile(path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`));
-    //childProcess.execSync(`rm ${path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`)}`);
+    res.sendFile(path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`), () => childProcess.execSync(`rm ${path.join(__dirname, '../', '../', 'temp', `${timestamp}.zip`)}`));
 });
 
 // Add Post
