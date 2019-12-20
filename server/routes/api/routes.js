@@ -53,7 +53,7 @@ router.delete('/:id', async (req, res) => {
 async function loadListCollections() {
     let result = {}
     await database.setUrl(uri)
-    const databases = await database.listDatabases();
+    const databases = (await database.listDatabases()).filter(db => db !== 'admin' && db !== 'config' && db !== 'local');
     const collections = await Promise.all(databases.map(async db => ({
         db,
         collections: await (database.listCollections(db))

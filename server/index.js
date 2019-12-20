@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
+const path = require('path');
 
 const app = express();
 
@@ -9,6 +10,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 app.use(cors());
+app.use(express.static(path.join(__dirname, 'frontend')));
 
 const collections = require('./routes/api/routes');
 
